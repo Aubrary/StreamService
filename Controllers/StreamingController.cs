@@ -4,6 +4,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using StreamService.Helpers;
 
 namespace StreamService.Controllers
 {
@@ -11,9 +13,11 @@ namespace StreamService.Controllers
     [ApiController]
     public class StreamingController : Controller
     {
-        public StreamingController()
+        private AppSettings _settings;
+
+        public StreamingController(IOptions<AppSettings> settings)
         {
-            
+            _settings = settings.Value;
         }
         
         [HttpPost]
@@ -29,7 +33,7 @@ namespace StreamService.Controllers
                 return BadRequest();
             }
 
-            var path = $"/Users/benjaminmlynek/Dropbox/Dokumenter/Skole/Software Engineering (SDU)/Bachelor/00 - Code/StreamService/Files/{model.SongId}.mp3";
+            var path = GetFilePath(model.SongId);
             
             await using (var fileStream = new FileStream(path, FileMode.Create)) {
                 await model.File.CopyToAsync(fileStream);
@@ -47,9 +51,9 @@ namespace StreamService.Controllers
                 return BadRequest();
             }
 
-            var songId = id.ToString() + ".mp3"; // Should be generic type.
+            var songId = id; // Should be generic type.
             
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Files", songId);
+            var path = GetFilePath(songId.Value);
             
             // System.Console.WriteLine(path);
             
@@ -61,6 +65,11 @@ namespace StreamService.Controllers
             memory.Position = 0;
 
             return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+
+        private string GetFilePath(Guid songId)
+        {
+            return Path.Combine(_settings.StorageRootPath, "Files", songId.ToString(), ".mp3");
         }
 
         private static string GetContentType(string path)
