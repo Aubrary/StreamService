@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -10,6 +11,7 @@ using StreamService.Helpers;
 namespace StreamService.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class StreamingController : Controller
     {
