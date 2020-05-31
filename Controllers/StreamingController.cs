@@ -71,7 +71,7 @@ namespace StreamService.Controllers
 
         private string GetFilePath(Guid songId)
         {
-            return Path.Combine(_settings.StorageRootPath, "Files", songId.ToString(), ".mp3");
+            return Path.Combine(_settings.StorageRootPath, songId + ".mp3");
         }
 
         private static string GetContentType(string path)
