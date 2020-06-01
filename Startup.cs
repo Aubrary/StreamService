@@ -68,7 +68,7 @@ namespace StreamService
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("streamservice/swagger/v1/swagger.json", "StreamService API V1");
+                c.SwaggerEndpoint("/streamservice/swagger/v1/swagger.json", "StreamService API V1 Traefik");
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "StreamService API V1");
             });
             app.UseAuthentication();
